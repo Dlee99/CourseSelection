@@ -6,8 +6,9 @@ public class Course {
 
     private String _name; //name of the course
     private String _description; //description of the course
-    private ArrayList<Course> _prerequisiteCourses; //the classes needed to be taken before this one
-    private static ArrayList<Course> _requirements; //the classes required to graduate
+    private ArrayList<Course> _prerequisiteCourses = new ArrayList(); //the classes needed to be taken before this one
+    private static ArrayList<Course> _requirements = new ArrayList(); //the classes required to graduate
+    private double _credits; //the amount of credits the course is worth
     private Subject _subject;
 
     /**
@@ -15,9 +16,10 @@ public class Course {
      * @param name the name of the course
      * @param description the description of the course
      */
-    public Course(String name, String description){
+    public Course(String name, String description, double credits){
         _name = name;
         _description = description;
+        _credits = credits;
     }
 
     /**
@@ -49,6 +51,10 @@ public class Course {
     public String getDescription(){
         return _description;
     }
+    /**
+     * Sets the subject of the course
+     * @param subject - the new subject classification
+     */
     public void setSubject(Subject subject){
         _subject = subject;
     }
