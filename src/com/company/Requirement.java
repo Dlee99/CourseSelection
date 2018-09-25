@@ -3,6 +3,7 @@ package com.company;
 public class Requirement {
     private Subject _subject;
     private double _credits;
+    private static Requirement[] _blankRequirements = initializeRequirements();
 
     public Requirement(Subject subject){
         _subject = subject;
@@ -21,5 +22,14 @@ public class Requirement {
     public Subject getSubject(){
         return _subject;
     }
-
+    private static Requirement[] initializeRequirements(){
+        Requirement[] r = new Requirement[Subject.subjects.length];
+        for (int i = 0; i < r.length; i++) {
+            r[i] = new Requirement(Subject.subjects[i]);
+        }
+        return r;
+    }
+    public static Requirement[] getBlankRequirements(){
+        return _blankRequirements;
+    }
 }
