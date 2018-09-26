@@ -1,7 +1,25 @@
 package com.company;
 
 public class YearRequirement {
-    private String _name;
-    private Requirement[] _requirements = Requirement.getBlankRequirements();
 
+    private GradeYear _gradeYear;
+    private Requirement[] _requirements = Requirement.getBlankRequirements();
+    public YearRequirement(){
+        Subject[] subjects = Subject.values();
+        for (int i = 0; i < _requirements.length; i++) {
+            _requirements[i] = new Requirement(subjects[i]);
+        }
+    }
+    public void setRequirement(Subject subject, double credits){
+        for (int i = 0; i < _requirements.length; i++) {
+            Requirement r = _requirements[i];
+            if(r.getSubject() == subject){
+                r.setCredits(credits);
+                return;
+            }
+        }
+    }
+    public GradeYear getGradeYear(){
+        return _gradeYear;
+    }
 }

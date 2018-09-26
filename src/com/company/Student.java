@@ -4,16 +4,16 @@ import java.util.ArrayList;
 
 public class Student {
     private String _name;
-    private int _gradeNumber;
+    private GradeYear _gradeYear;
 
-    public Student(String name, int grade){
+    public Student(String name, GradeYear gradeYear){
         _name = name;
-        _gradeNumber = grade;
+        _gradeYear = gradeYear;
     }
-     public void setGrade(int grade){
-        _gradeNumber = grade;
+    public void setGrade(GradeYear gradeYear){
+        _gradeYear = gradeYear;
     }
-    public int getGrade(){
-         return _gradeNumber;
+    public GradeYear getGrade(){
+         return _gradeYear;
     }
 }

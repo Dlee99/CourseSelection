@@ -6,7 +6,7 @@ public class School {
     private String _name; //the name of the school
     private String _emailExtension; //the @school.com for the school (ex: pvsd.org)
     private ArrayList<Course> _courses; //the courses that the school offers
-    private Requirement[] _graduationRequirements = new Requirement[Subject.values().length];
+    private YearRequirement[] _graduationRequirements = new YearRequirement[GradeYear.values().length];
 
     /**
      * Creates a school object
@@ -26,12 +26,11 @@ public class School {
      * @param subject the subject to set a credit requirement for
      * @param credits the amount of credits to be required
      */
-    public void setGraduationRequirement(Subject subject, double credits){
+    public void setRequirement(GradeYear year, Subject subject, double credits){
         for (int i = 0; i < _graduationRequirements.length; i++) {
-            Requirement r = _graduationRequirements[i];
-            Subject s = r.getSubject();
-            if(subject == s){
-                _graduationRequirements[i].setCredits(credits);
+            YearRequirement r = _graduationRequirements[i];
+            if(r.getGradeYear() == year){
+                r.setRequirement(subject, credits);
                 return;
             }
         }
