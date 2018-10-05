@@ -9,7 +9,8 @@ public class Course {
     private ArrayList<Course> _prerequisiteCourses = new ArrayList(); //the classes needed to be taken before this one
     private static ArrayList<Course> _requirements = new ArrayList(); //the classes required to graduate
     private double _credits; //the amount of credits the course is worth
-    private Subject _subject;
+    private Subject _subject; //the credit that this course will meet the requirement of
+    private Level _level; //the level that the course is on (Academic, Prep, Honors, AP)
 
     /**
      * Creates a course object
