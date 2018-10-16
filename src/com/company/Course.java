@@ -7,20 +7,28 @@ public class Course {
     private String _name; //name of the course
     private String _description; //description of the course
     private ArrayList<Course> _prerequisiteCourses = new ArrayList(); //the classes needed to be taken before this one
-    private static ArrayList<Course> _requirements = new ArrayList(); //the classes required to graduate
     private double _credits; //the amount of credits the course is worth
     private Subject _subject; //the credit that this course will meet the requirement of
     private Level _level; //the level that the course is on (Academic, Prep, Honors, AP)
-
+    private boolean _hasGIEP;
+    private boolean _isCore;
     /**
      * Creates a course object
      * @param name the name of the course
      * @param description the description of the course
      */
-    public Course(String name, String description, double credits){
+
+    public Course(String name, String description, double credits, boolean hasGIEP, boolean isCore, Subject subject, Level level){
         _name = name;
         _description = description;
         _credits = credits;
+        _hasGIEP = hasGIEP;
+        _isCore = isCore;
+        _subject = subject;
+        _level = level;
+    }
+    public boolean requiresGIEP() {
+        return _hasGIEP;
     }
 
     /**
@@ -92,5 +100,14 @@ public class Course {
         return studentCourses.containsAll(_prerequisiteCourses);
     }
 
-
+    @Override
+    public String toString() {
+        return  "name='" + _name + '\'' +
+                ", description='" + _description + '\'' +
+                ", prerequisiteCourses=" + _prerequisiteCourses +
+                ", credits=" + _credits +
+                ", subject=" + _subject +
+                ", level=" + _level +
+                ", hasGIEP=" + _hasGIEP;
+    }
 }
