@@ -5,7 +5,7 @@ import java.util.ArrayList;
 public class School {
     private String _name; //the name of the school
     private String _emailExtension; //the @school.com for the school (ex: pvsd.org)
-    private ArrayList<Course> _courses; //the courses that the school offers
+    private ArrayList<Course> _courses = new ArrayList<>(); //the courses that the school offers
     private YearRequirement[] _graduationRequirements = new YearRequirement[GradeYear.values().length];
 
     /**
@@ -44,6 +44,16 @@ public class School {
         _courses.add(course);
         for (Course c: courses){
             _courses.add(c);
+        }
+    }
+    public void addCourse(ArrayList<Course> courses){
+        for(Course c: courses){
+            _courses.add(c);
+        }
+    }
+    public void initializePrereqs(){
+        for(Course c: _courses){
+            c.initializePrereqs(_courses);
         }
     }
 

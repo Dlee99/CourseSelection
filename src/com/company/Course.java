@@ -6,26 +6,40 @@ public class Course {
 
     private String _name; //name of the course
     private String _description; //description of the course
-    private ArrayList<Course> _prerequisiteCourses = new ArrayList(); //the classes needed to be taken before this one
+    private ArrayList<Course> _prerequisiteCourses = new ArrayList<>(); //the classes needed to be taken before this one
+    private ArrayList<Course> _prerequisiteToCourses = new ArrayList<>();
     private double _credits; //the amount of credits the course is worth
     private Subject _subject; //the credit that this course will meet the requirement of
     private Level _level; //the level that the course is on (Academic, Prep, Honors, AP)
     private boolean _hasGIEP;
+    private String _preReqString;
+    private String _preReqToString;
+    private int _code;
     private boolean _isCore;
+    private GradeYear _minGrade;
+    private GradeYear _maxGrade;
     /**
      * Creates a course object
      * @param name the name of the course
      * @param description the description of the course
      */
 
-    public Course(String name, String description, double credits, boolean hasGIEP, boolean isCore, Subject subject, Level level){
+    public Course(String name, int code, Level level, boolean isCore, boolean hasGIEP,
+                  Subject subject, double credits, GradeYear minGrade, GradeYear maxGrade,
+                  String preReqs, String preReqTo, String description){
         _name = name;
-        _description = description;
-        _credits = credits;
-        _hasGIEP = hasGIEP;
-        _isCore = isCore;
-        _subject = subject;
+        _code = code;
         _level = level;
+        _isCore = isCore;
+        _hasGIEP = hasGIEP;
+        _subject = subject;
+        _credits = credits;
+        _minGrade = minGrade;
+        _maxGrade = maxGrade;
+        _preReqString = preReqs;
+        _preReqToString = preReqTo;
+        _description = description;
+
     }
     public boolean requiresGIEP() {
         return _hasGIEP;
@@ -67,6 +81,7 @@ public class Course {
     public void setSubject(Subject subject){
         _subject = subject;
     }
+
     public Subject getSubject(){
         return _subject;
     }
@@ -77,6 +92,11 @@ public class Course {
      */
     public void addPrerequisite(Course course, Course ... courses){
         _prerequisiteCourses.add(course);
+        for(Course c: courses){
+            _prerequisiteCourses.add(c);
+        }
+    }
+    public void addPrerequisite(ArrayList<Course> courses){
         for(Course c: courses){
             _prerequisiteCourses.add(c);
         }
@@ -104,10 +124,48 @@ public class Course {
     public String toString() {
         return  "name='" + _name + '\'' +
                 ", description='" + _description + '\'' +
-                ", prerequisiteCourses=" + _prerequisiteCourses +
                 ", credits=" + _credits +
                 ", subject=" + _subject +
                 ", level=" + _level +
-                ", hasGIEP=" + _hasGIEP;
+                ", hasGIEP=" + _hasGIEP +
+                ", code=" + _code +
+                ", isCore=" + _isCore +
+                ", minGrade=" + _minGrade +
+                ", maxGrade=" + _maxGrade;
+    }
+    public static ArrayList<Course> getCourses(String name, ArrayList<Course> courses){
+        ArrayList<Course> toReturn = new ArrayList<>();
+        for (Course c: courses) {
+            String courseName = c.getName().replaceAll(" ","");
+            String findName = name.replaceAll(" ", "");
+            if(courseName.contains(findName)){
+                toReturn.add(c);
+            }
+        }
+        return toReturn;
+    }
+
+    public void initializePrereqs(ArrayList<Course> courses) {
+        String[] prereqs = _preReqString.split(",");
+        String[] prereqTos = _preReqToString.split(",");
+        for (int i = 0; i < prereqs.length; i++) {
+            String prereq = prereqs[i];
+            if(!prereq.equals("N/A")){
+                ArrayList<Course> preReqList = getCourses(prereq, courses);
+                for(Course c: preReqList){
+                    _prerequisiteCourses.add(c);
+                }
+            }
+        }
+        for (int i = 0; i < prereqTos.length; i++) {
+            String prereqTo = prereqTos[i];
+            if(!prereqTo.equals("N/A")){
+                ArrayList<Course> prereqToList = getCourses(prereqTo, courses);
+                for(Course c: prereqToList){
+                    _prerequisiteToCourses.add(c);
+                }
+            }
+        }
+
     }
 }
