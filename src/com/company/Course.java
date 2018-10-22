@@ -133,6 +133,9 @@ public class Course {
                 ", minGrade=" + _minGrade +
                 ", maxGrade=" + _maxGrade;
     }
+    public ArrayList<Course> getPreprequisites(){
+        return _prerequisiteCourses;
+    }
     public static ArrayList<Course> getCourses(String name, ArrayList<Course> courses){
         ArrayList<Course> toReturn = new ArrayList<>();
         for (Course c: courses) {
@@ -166,6 +169,11 @@ public class Course {
                 }
             }
         }
-
+    }
+    public ArrayList<Course> nextCourses(){
+        if(_prerequisiteToCourses.size() == 0){
+            return null;
+        }
+        return _prerequisiteToCourses;
     }
 }

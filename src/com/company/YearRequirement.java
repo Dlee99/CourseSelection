@@ -4,7 +4,8 @@ public class YearRequirement {
 
     private GradeYear _gradeYear;
     private Requirement[] _requirements = Requirement.getBlankRequirements();
-    public YearRequirement(){
+    public YearRequirement(GradeYear gradeYear){
+        _gradeYear = gradeYear;
         Subject[] subjects = Subject.values();
         for (int i = 0; i < _requirements.length; i++) {
             _requirements[i] = new Requirement(subjects[i]);

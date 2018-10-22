@@ -8,4 +8,12 @@ public enum GradeYear {
         _gradeNumber = gradeNumber;
         _name = name;
     }
+
+    public int getGradeNumber() {
+        return _gradeNumber;
+    }
+
+    public String getName() {
+        return _name;
+    }
 }

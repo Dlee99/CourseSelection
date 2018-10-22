@@ -16,8 +16,12 @@ public class School {
         _name = name;
         Subject[] subjects = Subject.values();
         for (int i = 0; i < _graduationRequirements.length; i++) {
-
+            _graduationRequirements[i] = new YearRequirement(GradeYear.values()[i]);
         }
+    }
+
+    public ArrayList<Course> getCourses() {
+        return _courses;
     }
 
     /**
@@ -55,6 +59,10 @@ public class School {
         for(Course c: _courses){
             c.initializePrereqs(_courses);
         }
+    }
+
+    public ArrayList<Course> getCourses(String name){
+        return Course.getCourses(name, _courses);
     }
 
     /**
