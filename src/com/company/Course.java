@@ -1,8 +1,9 @@
 package com.company;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 
-public class Course {
+public class Course implements Comparable<Course> {
 
     private String _name; //name of the course
     private String _description; //description of the course
@@ -60,6 +61,10 @@ public class Course {
         return _name;
     }
 
+    public Level getLevel() {
+        return _level;
+    }
+
     /**
      * Sets the description of the course
      * @param description - new description of the course
@@ -102,6 +107,10 @@ public class Course {
         }
     }
 
+    public double getCredits() {
+        return _credits;
+    }
+
     /**
      * Removes a prerequisite course from the list
      * @param course the course to be removed
@@ -111,13 +120,22 @@ public class Course {
         return _prerequisiteCourses.remove(course);
     }
 
-    /**
-     * Validates whether or not the list of courses meets the prerequisites for a course
-     * @param studentCourses the courses that were taken to check for the prerequisites
-     * @return True if the list has the necessary prerequisites, false if not
-     */
-    public boolean validatePrereqs(ArrayList<Course> studentCourses){
-        return studentCourses.containsAll(_prerequisiteCourses);
+    public boolean validatePrereqs(Student student) {
+        int gradeNumber = student.getGradeYear().getGradeNumber();
+        if (!(gradeNumber + 1 >= _minGrade.getGradeNumber() && gradeNumber + 1 <= _maxGrade.getGradeNumber())) {
+            return false;
+        }
+        if (_prerequisiteCourses.isEmpty()) {
+            return true;
+        } else {
+            for (int i = 0; i < _prerequisiteCourses.size(); i++) {
+                Course toFind = _prerequisiteCourses.get(i);
+                if (!student.hasTaken(toFind)) {
+                    return false;
+                }
+            }
+        }
+        return true;
     }
 
     @Override
@@ -131,7 +149,7 @@ public class Course {
                 ", code=" + _code +
                 ", isCore=" + _isCore +
                 ", minGrade=" + _minGrade +
-                ", maxGrade=" + _maxGrade;
+                ", maxGrade=" + _maxGrade + "\n";
     }
     public ArrayList<Course> getPreprequisites(){
         return _prerequisiteCourses;
@@ -139,14 +157,70 @@ public class Course {
     public static ArrayList<Course> getCourses(String name, ArrayList<Course> courses){
         ArrayList<Course> toReturn = new ArrayList<>();
         for (Course c: courses) {
-            String courseName = c.getName().replaceAll(" ","");
-            String findName = name.replaceAll(" ", "");
-            if(courseName.contains(findName)){
+            String courseName = c.getName().replaceAll("[-\\s]","");
+            String findName = name.replaceAll("[-\\s]", "");
+            if(!(findName.contains("Honors") || findName.contains("AP") || findName.contains("Advanced Placement"))){
+                courseName = courseName.replaceAll("(Honors)|(Advanced\\sPlacement)|(AP)|(College Prep)|(Preparatory)|(Prep)|(Academic)", "");
+            }
+            if (courseName.toLowerCase().equals(findName.toLowerCase())) {
                 toReturn.add(c);
             }
         }
         return toReturn;
     }
+    public static ArrayList<Course> getCourses(Course course, ArrayList<Course> courses){
+        ArrayList<Course> toReturn = new ArrayList<>();
+        for (Course c: courses) {
+            String courseName = c.getName().replaceAll("[-\\s]","");
+            String findName = course.getName().replaceAll("[-\\s]|(Honors)|(Advanced\\sPlacement)|(AP)|(College Prep)|(Preparatory)|(Prep)|(Academic)", "");
+            if (courseName.toLowerCase().equals(findName.toLowerCase())) {
+                toReturn.add(c);
+            }
+        }
+        return toReturn;
+    }
+    public static ArrayList<Course> getCourses(String name, ArrayList<Course> courses, Level level){
+        ArrayList<Course> toReturn = new ArrayList<>();
+        for (Course c: courses) {
+            String courseName = c.getName().replaceAll("[-\\s]|(Honors)|(Advanced\\sPlacement)|(AP)|(College Prep)|(Preparatory)|(Prep)|(Academic)","");
+            String findName = name.replaceAll("[-\\s]|(Honors)|(Advanced\\sPlacement)|(AP)|(College Prep)|(Preparatory)|(Prep)|(Academic)", "");
+            if(courseName.toLowerCase().equals(findName.toLowerCase()) && level._creditWeight == c.getLevel()._creditWeight){
+                toReturn.add(c);
+            }
+        }
+        if(toReturn.isEmpty()){
+            if(level == Level.ACADEMIC) {
+                return getCourses(name, courses, Level.getNext(level, Grade.C));
+            }
+            else{
+                return null;
+            }
+        }
+
+        return toReturn;
+    }
+    public static ArrayList<Course> getCourses(Subject subject, ArrayList<Course> courses, Level level){
+        ArrayList<Course> toReturn = new ArrayList<>();
+        for (Course c: courses) {
+            if(c.getSubject() == subject && level._creditWeight == c.getLevel()._creditWeight){
+                toReturn.add(c);
+            }
+        }
+        if(toReturn.isEmpty()){
+            return getCourses(subject, courses, Level.getNext(level, Grade.C));
+        }
+        return toReturn;
+    }
+    public static ArrayList<Course> getCourses(Subject subject, ArrayList<Course> courses){
+        ArrayList<Course> toReturn = new ArrayList<>();
+        for (Course c: courses) {
+            if(c.getSubject() == subject ){
+                toReturn.add(c);
+            }
+        }
+        return toReturn;
+    }
+
 
     public void initializePrereqs(ArrayList<Course> courses) {
         String[] prereqs = _preReqString.split(",");
@@ -155,8 +229,8 @@ public class Course {
             String prereq = prereqs[i];
             if(!prereq.equals("N/A")){
                 ArrayList<Course> preReqList = getCourses(prereq, courses);
-                for(Course c: preReqList){
-                    _prerequisiteCourses.add(c);
+                if(!preReqList.isEmpty()) {
+                    _prerequisiteCourses.add(preReqList.get(0));
                 }
             }
         }
@@ -176,4 +250,11 @@ public class Course {
         }
         return _prerequisiteToCourses;
     }
+
+    @Override
+    public int compareTo(Course o) {
+        return this.getSubject().compareTo(o.getSubject());
+    }
+
+
 }

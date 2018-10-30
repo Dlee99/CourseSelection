@@ -39,6 +39,15 @@ public class School {
             }
         }
     }
+    public Requirement getRequirement(GradeYear year, Subject subject){
+        for (int i = 0; i < _graduationRequirements.length; i++) {
+            YearRequirement r = _graduationRequirements[i];
+            if(r.getGradeYear() == year){
+                return r.getRequirement(subject);
+            }
+        }
+        return null;
+    }
     /**
      * Adds a course to the courses offered at the school
      * @param course the course to be added
@@ -63,6 +72,9 @@ public class School {
 
     public ArrayList<Course> getCourses(String name){
         return Course.getCourses(name, _courses);
+    }
+    public ArrayList<Course> getCourses(Subject subject){
+        return Course.getCourses(subject, _courses);
     }
 
     /**

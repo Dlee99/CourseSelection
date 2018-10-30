@@ -20,6 +20,15 @@ public class YearRequirement {
             }
         }
     }
+    public Requirement getRequirement(Subject subject){
+        for (int i = 0; i < _requirements.length; i++) {
+            Requirement r = _requirements[i];
+            if(r.getSubject() == subject){
+                return r;
+            }
+        }
+        return null;
+    }
     public GradeYear getGradeYear(){
         return _gradeYear;
     }

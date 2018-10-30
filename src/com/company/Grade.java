@@ -17,5 +17,13 @@ public enum Grade {
     public double getScale() {
         return _scale;
     }
+    public static Grade getGrade(String value){
+        for (Grade g: values()) {
+            if(g.getName().equalsIgnoreCase(value.replaceAll(" ", ""))){
+                return g;
+            }
+        }
+        return Grade.X;
+    }
 
 }
